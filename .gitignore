@@ -5,3 +5,6 @@ wakhi-calendar - Copy.html
 *.pdf
 !pdfs/*.pdf
 wakhi-calendar.html
+
+.vercel
+.env*
