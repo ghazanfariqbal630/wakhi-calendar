@@ -1,6 +1,15 @@
 <meta charset="utf-8">
 <title>Wakhi Sholẽ Hisobet</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#eef2f4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0f171c" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Wakhi Calendar">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,500;7..72,700&family=Noto+Sans:wght@400;500;600&display=swap">
@@ -221,6 +230,8 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
 }
 
 .downloads { display: flex; flex-direction: column; gap: 12px; }
+.ios-hint { margin: 0; font-size: 13px; color: var(--muted); }
+.install-btn { border-color: var(--accent); }
 .downloads h2 { font-family: var(--font-display); font-size: 20px; margin: 0; color: var(--sky); }
 .dl-list { display: flex; flex-wrap: wrap; gap: 8px; }
 .dl { display: flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); text-decoration: none; font-variant-numeric: tabular-nums; }
@@ -261,6 +272,7 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
         <div class="w" id="todayW"></div>
         <div class="g" id="todayG"></div>
       </div>
+      <button type="button" class="theme-btn install-btn" id="installBtn" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg><span>Install app</span></button>
       <button type="button" class="theme-btn" id="themeBtn" aria-label="Change theme"></button>
     </div>
   </header>
@@ -297,6 +309,7 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
 
   <section class="downloads" aria-labelledby="dlHead">
     <h2 id="dlHead">Download the printed calendars</h2>
+    <p class="ios-hint" id="iosHint" hidden>On iPhone or iPad: tap the Share button in Safari, then <b>Add to Home Screen</b> to install this calendar as an app.</p>
     <div class="dl-list">
       <a class="dl" href="pdfs/wakhi-sol-hisob-2026-27.pdf" download><span class="dl-y">2026-27</span><span class="dl-t">PDF</span></a>
       <a class="dl" href="pdfs/wakhi-sol-hisob-2025-26.pdf" download><span class="dl-y">2025-26</span><span class="dl-t">PDF</span></a>
@@ -599,6 +612,23 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
     applyTheme();
   });
   applyTheme();
+
+  // install as an app (PWA): works when the page is served from the website, not inside a preview frame
+  const installBtn = document.getElementById("installBtn");
+  let installEvt = null;
+  addEventListener("beforeinstallprompt", e => { e.preventDefault(); installEvt = e; installBtn.hidden = false; });
+  installBtn.addEventListener("click", async () => {
+    if (!installEvt) return;
+    installEvt.prompt();
+    try { await installEvt.userChoice; } catch (e) {}
+    installEvt = null; installBtn.hidden = true;
+  });
+  addEventListener("appinstalled", () => { installBtn.hidden = true; });
+  const standalone = matchMedia("(display-mode: standalone)").matches || navigator.standalone;
+  if (/iphone|ipad|ipod/i.test(navigator.userAgent) && !standalone) document.getElementById("iosHint").hidden = false;
+  if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
+    try { navigator.serviceWorker.register("sw.js").catch(() => {}); } catch (e) {}
+  }
 
   document.getElementById("footYear").textContent = `© ${now.getFullYear()}`;
 
