@@ -1,0 +1,7 @@
+# local only
+.claude/
+.vercel/
+wakhi-calendar - Copy.html
+*.pdf
+!pdfs/*.pdf
+wakhi-calendar.html
