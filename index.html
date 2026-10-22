@@ -323,7 +323,7 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
   <footer class="note">
     <p>Each Wakhi month runs from the 21st of one English month to the 20th of the next, so the year opens on 21 March (Nawroz). A month has as many days as the English month it starts in. Yitoqish (Feb–Mar) has 29 days in a leap year.</p>
     <p>Up to 2025-26 the published calendars opened the year with Yitoqish. From 2026-27 the year opens with Haba, and each year here follows the naming of its own published edition. Printed editions exist for 2020-21 to 2026-27. Years before 2020-21 use the naming of the earliest editions, and years after 2026-27 use the 2026-27 naming. Photos for those years come from the nearest edition.</p>
-    <p>Marked days are fixed-date occasions shown every year (Nawroz, Mazdũrẽ Ror, Takht Nẽshine Salgira, Ozodhiẽ Ror, Imomẽ Chũvake Salgira), plus occasions printed in the 2022-23 and 2023-24 editions. Eid and other moon-sighted dates are not included.</p>
+    <p>This is a cultural calendar for the whole Wakhi community. Marked days are Nawroz, Mazdũrẽ Ror and Ozodhiẽ Ror every year, plus the cultural occasions printed in the 2022-23 and 2023-24 editions (Tag̃hm, C̃hnir). Religious occasions are not included yet.</p>
   </footer>
 
   <section class="downloads" aria-labelledby="dlHead">
@@ -366,9 +366,7 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
   const FIXED = {
     "03-21": ["Nawroz", "Wakhi New Year"],
     "05-01": ["Mazdũrẽ Ror", "Labour Day"],
-    "07-11": ["Takht Nẽshine Salgira", "Imamat Day"],
-    "08-14": ["Ozodhiẽ Ror", "Independence Day"],
-    "12-13": ["Imomẽ Chũvake Salgira", "Imam's birthday"]
+    "08-14": ["Ozodhiẽ Ror", "Independence Day"]
   };
   // occasions printed in a specific edition
   // month photos from each year's PDF (page n = month n); 2020-21 has none, later years reuse 2026-27
@@ -380,9 +378,7 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
 
   const DATED = {
     "2022-04-01": ["Tag̃hm", "Spring sowing"],
-    "2022-04-17": ["Easter", ""],
     "2022-08-01": ["C̃hnir", ""],
-    "2022-10-09": ["Eid Milad un Nabi", ""],
     "2023-04-01": ["Tag̃hm (Shimshal)", "Spring sowing"]
   };
 
