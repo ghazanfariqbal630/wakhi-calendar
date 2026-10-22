@@ -92,11 +92,20 @@ h1 .yr { color: var(--accent); white-space: nowrap; }
 @media (max-width: 640px) { .mast { grid-template-columns: 1fr auto; align-items: start; } .theme-btn { padding: 0 11px; } .theme-btn span { display: none; } }
 
 /* year strip */
-.years { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: thin; }
-.years button { flex: 0 0 auto; font: 500 14px var(--font-body); font-variant-numeric: tabular-nums; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; display: flex; align-items: center; gap: 6px; }
-.years button:hover { border-color: var(--sky); }
-.years button[aria-pressed="true"] { background: var(--sky); border-color: var(--sky); color: var(--surface); }
-.years .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+.years { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.yr-step { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); color: var(--sky); font: 600 22px/1 var(--font-body); cursor: pointer; display: grid; place-items: center; padding: 0 0 3px; flex: 0 0 auto; }
+.yr-step:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+.yr-step:disabled { opacity: .35; cursor: default; }
+.yr-select { height: 40px; min-width: 150px; padding: 0 36px 0 16px; border-radius: 999px; border: 1px solid var(--sky); background: var(--sky); color: var(--surface);
+  font: 600 16px var(--font-body); font-variant-numeric: tabular-nums; cursor: pointer; appearance: none; -webkit-appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%);
+  background-position: calc(100% - 20px) 50%, calc(100% - 14px) 50%; background-size: 6px 6px; background-repeat: no-repeat; }
+.yr-select option, .yr-select optgroup { background: var(--surface); color: var(--ink); }
+.yr-now { height: 40px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--accent); background: var(--surface); color: var(--accent); font: 600 14px var(--font-body); font-variant-numeric: tabular-nums; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+.yr-now::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+.yr-now:hover { background: var(--accent-soft); }
+.yr-now[aria-current="true"] { opacity: .55; cursor: default; }
+.yr-badge { font-size: 12px; color: var(--muted); padding-left: 4px; }
 button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 .bar { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; justify-content: space-between; }
@@ -201,8 +210,12 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
   .today-card { display: none; }               /* the current-month box below carries today's date */
   .sticky-head { display: contents; }
   .years { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: var(--bg); margin-inline: -16px; padding: 8px 16px; scrollbar-width: none; }
-  .years::-webkit-scrollbar { display: none; }
-  .years button { padding: 7px 12px; font-size: 13.5px; }
+  .years { flex-wrap: nowrap; gap: 6px; }
+  .yr-step { width: 36px; height: 36px; }
+  .yr-select { height: 36px; min-width: 0; flex: 1 1 auto; font-size: 15px; }
+  .yr-now { height: 36px; padding: 0 12px; font-size: 13px; white-space: nowrap; flex: 0 0 auto; }
+  .yr-now-y { display: none; }
+  .yr-badge { display: none; }
   .current { padding: 14px 12px; border-radius: 14px; gap: 12px; }
   .cur-name { font-size: 38px; }
   .cur-day { font-size: 15px; }
@@ -277,7 +290,13 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
     </div>
   </header>
 
-  <nav class="years" id="years" aria-label="Choose year"></nav>
+  <nav class="years" id="years" aria-label="Choose year">
+    <button type="button" class="yr-step" id="yrPrev" aria-label="Previous year">‹</button>
+    <select id="yrSelect" class="yr-select" aria-label="Year"></select>
+    <button type="button" class="yr-step" id="yrNext" aria-label="Next year">›</button>
+    <button type="button" class="yr-now" id="yrNow"></button>
+    <span class="yr-badge" id="yrBadge"></span>
+  </nav>
   </div>
 
   <div class="top">
@@ -303,7 +322,7 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
 
   <footer class="note">
     <p>Each Wakhi month runs from the 21st of one English month to the 20th of the next, so the year opens on 21 March (Nawroz). A month has as many days as the English month it starts in. Yitoqish (Feb–Mar) has 29 days in a leap year.</p>
-    <p>Up to 2025-26 the published calendars opened the year with Yitoqish. From 2026-27 the year opens with Haba, and each year here follows the naming of its own published edition. Years after 2026-27 use the 2026-27 naming.</p>
+    <p>Up to 2025-26 the published calendars opened the year with Yitoqish. From 2026-27 the year opens with Haba, and each year here follows the naming of its own published edition. Printed editions exist for 2020-21 to 2026-27. Years before 2020-21 use the naming of the earliest editions, and years after 2026-27 use the 2026-27 naming. Photos for those years come from the nearest edition.</p>
     <p>Marked days are fixed-date occasions shown every year (Nawroz, Mazdũrẽ Ror, Takht Nẽshine Salgira, Ozodhiẽ Ror, Imomẽ Chũvake Salgira), plus occasions printed in the 2022-23 and 2023-24 editions. Eid and other moon-sighted dates are not included.</p>
   </footer>
 
@@ -339,8 +358,8 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
   const EN = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
   const DOW = [["Yekshẽmbi","Sun"],["Dũshẽmbi","Mon"],["Sishẽmbi","Tue"],["Chorshẽmbi","Wed"],
     ["Ponshẽmbi","Thu"],["Jũmha","Fri"],["Shẽmbi","Sat"]];
-  const FIRST_YEAR = 2020, LAST_YEAR = 2030;
-  const PUBLISHED_UNTIL = 2026;      // 2026-27 is the latest published edition
+  const FIRST_YEAR = 1960, LAST_YEAR = 2060;   // 1960-61 … 2060-61
+  const PUBLISHED_FROM = 2020, PUBLISHED_UNTIL = 2026;   // printed editions 2020-21 … 2026-27
   const NEW_NAMING_FROM = 2026;      // from 2026-27 the year opens with Haba
 
   // fixed English-date occasions, every year
@@ -401,36 +420,49 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
   const todayT = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
   const todayW = toWakhi(todayT);
 
+  // always open on the current year (a #y1985 link can open another one)
   let sel = todayW.Y;
-  try { const s = +localStorage.getItem("wakhi-year"); if (s >= FIRST_YEAR && s <= LAST_YEAR) sel = s; } catch (e) {}
   if (/^#y\d{4}$/.test(location.hash)) { const h = +location.hash.slice(2); if (h >= FIRST_YEAR && h <= LAST_YEAR) sel = h; }
   if (sel < FIRST_YEAR || sel > LAST_YEAR) sel = Math.min(LAST_YEAR, Math.max(FIRST_YEAR, sel));
 
   document.getElementById("todayW").textContent = `${todayW.day} ${todayW.m.name} ${label(todayW.Y)}`;
   document.getElementById("todayG").textContent = `${DOW[now.getDay()][0]} · ${fmtG(new Date(todayT))}`;
 
-  const yearsEl = document.getElementById("years");
-  for (let Y = FIRST_YEAR; Y <= LAST_YEAR; Y++) {
-    const b = document.createElement("button");
-    b.type = "button"; b.id = "yr-" + Y; b.dataset.y = Y;
-    b.innerHTML = (Y === todayW.Y ? '<span class="dot" aria-hidden="true"></span>' : "") + label(Y);
-    b.addEventListener("click", () => { sel = Y; render(); });
-    yearsEl.appendChild(b);
+  // year picker: dropdown grouped by decade, ‹ › for one year back/forward, and a jump back to this year
+  const yrSelect = document.getElementById("yrSelect");
+  for (let d = Math.floor(FIRST_YEAR / 10) * 10; d <= LAST_YEAR; d += 10) {
+    const g = document.createElement("optgroup");
+    g.label = `${d}s`;
+    for (let Y = Math.max(d, FIRST_YEAR); Y <= Math.min(d + 9, LAST_YEAR); Y++) {
+      const o = document.createElement("option");
+      o.value = Y;
+      o.textContent = label(Y) + (Y === todayW.Y ? " ●" : "");
+      g.appendChild(o);
+    }
+    yrSelect.appendChild(g);
   }
+  yrSelect.addEventListener("change", () => { sel = +yrSelect.value; render(); });
+  document.getElementById("yrPrev").addEventListener("click", () => { if (sel > FIRST_YEAR) { sel--; render(); } });
+  document.getElementById("yrNext").addEventListener("click", () => { if (sel < LAST_YEAR) { sel++; render(); } });
+  const yrNow = document.getElementById("yrNow");
+  yrNow.innerHTML = `This year<span class="yr-now-y"> · ${label(todayW.Y)}</span>`;
+  yrNow.addEventListener("click", () => { sel = todayW.Y; render(); });
 
   function render() {
-    try { localStorage.setItem("wakhi-year", sel); } catch (e) {}
     document.getElementById("yrTitle").textContent = `(${label(sel)})`;
-    yearsEl.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", +b.dataset.y === sel));
-    const cur = document.getElementById("yr-" + sel);
-    if (cur) cur.scrollIntoView({ block: "nearest", inline: "center" });
+    yrSelect.value = sel;
+    document.getElementById("yrPrev").disabled = sel <= FIRST_YEAR;
+    document.getElementById("yrNext").disabled = sel >= LAST_YEAR;
+    yrNow.setAttribute("aria-current", sel === todayW.Y);
+    const isPub = sel >= PUBLISHED_FROM && sel <= PUBLISHED_UNTIL;
+    document.getElementById("yrBadge").textContent = isPub ? "Published edition" : "Calculated";
 
     const ms = yearMonths(sel);
     const first = new Date(ms[0].start), last = new Date(ms[11].start + (ms[11].len - 1) * DAY);
-    const pub = sel <= PUBLISHED_UNTIL
-      ? "Matches the published edition."
-      : "Not published yet. Worked out with the same rule as the published years.";
-    const leap = ms[11].len === 29 ? " Yitoqish has 29 days this year." : "";
+    const pub = isPub ? "Matches the published edition."
+      : sel > PUBLISHED_UNTIL ? "Not published yet. Worked out with the same rule as the published years."
+      : "No printed edition for this year. Worked out with the same rule as the published years.";
+    const leap = ms[11].len === 29 ? ` ${ms[11].name} has 29 days this year.` : "";
     document.getElementById("status").innerHTML =
       `<b>${fmtG(first)} – ${fmtG(last)}</b> · ${pub}${leap}`;
 
