@@ -3,6 +3,7 @@
   "short_name": "Wakhi Calendar",
   "description": "Wakhi solar calendar by Kũngra Research & Development (KRD · Aman Maad)",
   "lang": "en",
+  "id": "/",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
