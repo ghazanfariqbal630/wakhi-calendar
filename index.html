@@ -46,6 +46,7 @@
 :root { --z: 1; --vh: calc(100vh / var(--z)); --dvh: calc(100dvh / var(--z)); }
 .wrap { zoom: var(--z); }
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 
 /* Colorful theme: each month card and the top box take their own hue (--h, set per month in script).
    Light or dark still follows the device. */
@@ -263,6 +264,33 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
   .foot-logo { width: 72px; height: 72px; }
   .site-foot .org-name { font-size: 19px; }
 }
+/* settings panel */
+.gear-btn svg { stroke: var(--sky); }
+.settings { width: min(560px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); padding: 0; border: 1px solid var(--line); border-radius: 18px; background: var(--surface); color: var(--ink); box-shadow: 0 24px 60px -20px rgba(0,0,0,.5); }
+.settings::backdrop { background: rgba(8, 14, 18, .55); }
+.set-head { position: sticky; top: 0; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 18px 12px; background: var(--surface); border-bottom: 1px solid var(--line); z-index: 1; }
+.set-head h2 { margin: 0; font-family: var(--font-display); font-size: 22px; color: var(--sky); }
+.set-close { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); color: var(--ink); font-size: 16px; cursor: pointer; }
+.set-sec { padding: 14px 18px; border-bottom: 1px solid var(--line); display: flex; flex-direction: column; gap: 10px; }
+.set-sec:last-child { border-bottom: 0; padding-bottom: 20px; }
+.set-sec h3 { margin: 0; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.set-brand { text-transform: none; letter-spacing: 0; font-size: 12px; color: var(--accent); border: 1px solid var(--accent); border-radius: 999px; padding: 1px 8px; }
+.set-brand:empty { display: none; }
+.set-themes { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.set-themes button { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 4px; border-radius: 12px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); font: 500 13px var(--font-body); cursor: pointer; }
+.set-themes button svg { width: 22px; height: 22px; stroke: var(--accent); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.set-themes button[aria-checked="true"] { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); background: var(--accent-soft); }
+.set-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.set-btn { display: inline-flex; align-items: center; height: 38px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); font: 600 13.5px var(--font-body); cursor: pointer; text-decoration: none; }
+.set-btn:hover { border-color: var(--accent); }
+.set-btn.primary { background: var(--accent); border-color: var(--accent); color: var(--surface); }
+.set-status { margin: 0; font-size: 13.5px; }
+.set-status:empty { display: none; }
+.set-note { margin: 0; font-size: 13px; color: var(--muted); line-height: 1.5; }
+.set-steps { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; font-size: 14px; line-height: 1.45; }
+.set-steps b { color: var(--sky); }
+@media (max-width: 640px) { .gear-btn { padding: 0 11px; } .gear-btn span { display: none; } .set-themes { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
 .note { font-size: 12.5px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 14px; max-width: 80ch; display: flex; flex-direction: column; gap: 6px; }
 .note p { margin: 0; }
 @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
@@ -287,6 +315,7 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
       </div>
       <button type="button" class="theme-btn install-btn" id="installBtn" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg><span>Install app</span></button>
       <button type="button" class="theme-btn" id="themeBtn" aria-label="Change theme"></button>
+      <button type="button" class="theme-btn gear-btn" id="settingsBtn" aria-label="App settings"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg><span>Settings</span></button>
     </div>
   </header>
 
@@ -350,6 +379,42 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
     </div>
   </footer>
 </div>
+
+<dialog class="settings" id="settings" aria-labelledby="setTitle">
+  <div class="set-head">
+    <h2 id="setTitle">App settings</h2>
+    <button type="button" class="set-close" id="setClose" aria-label="Close settings">&#10005;</button>
+  </div>
+
+  <section class="set-sec">
+    <h3>Theme</h3>
+    <div class="set-themes" id="setThemes" role="radiogroup" aria-label="Theme"></div>
+  </section>
+
+  <section class="set-sec">
+    <h3>Install as an app</h3>
+    <p class="set-status" id="setInstallStatus"></p>
+    <div class="set-row">
+      <button type="button" class="set-btn primary" id="setInstall" hidden>Install app</button>
+      <a class="set-btn" id="setChrome" hidden>Open in Chrome</a>
+      <button type="button" class="set-btn" id="setCopy">Copy link</button>
+    </div>
+  </section>
+
+  <section class="set-sec" id="setPhone" hidden>
+    <h3>Phone setup <span class="set-brand" id="setBrand"></span></h3>
+    <p class="set-note">Some phones stop apps installed from Chrome to save battery, so the icon does not open. A web app is not allowed to change these phone settings itself, so do this once:</p>
+    <ol class="set-steps" id="setSteps"></ol>
+    <p class="set-note">Still not opening? Remove the app, then in Chrome tap &#8942; &rarr; <b>Add to Home screen</b> &rarr; <b>Create shortcut</b>. The shortcut always opens.</p>
+  </section>
+
+  <section class="set-sec">
+    <h3>Repair</h3>
+    <p class="set-note">If the app shows an old page or will not load, this clears the calendar's saved offline copy and loads it fresh.</p>
+    <div class="set-row"><button type="button" class="set-btn" id="setRepair">Repair app</button></div>
+    <p class="set-status" id="setRepairMsg" role="status"></p>
+  </section>
+</dialog>
 
 <script>
 (function () {
@@ -677,6 +742,108 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
   if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
     try { navigator.serviceWorker.register("sw.js").catch(() => {}); } catch (e) {}
   }
+
+  // ---- App settings panel: theme, install, phone-specific setup, repair ----
+  const dlg = document.getElementById("settings");
+  const setThemes = document.getElementById("setThemes");
+  ["auto", "light", "dark", "colorful"].forEach(t => {
+    const b = document.createElement("button");
+    b.type = "button"; b.setAttribute("role", "radio"); b.dataset.t = t;
+    b.innerHTML = ICONS[t] + NAMES[t];
+    b.addEventListener("click", () => { theme = t; applyTheme(); syncThemes(); });
+    setThemes.appendChild(b);
+  });
+  function syncThemes() { setThemes.querySelectorAll("button").forEach(b => b.setAttribute("aria-checked", b.dataset.t === theme)); }
+  themeBtn.addEventListener("click", syncThemes);
+
+  const ua = navigator.userAgent;
+  const isAndroid = /android/i.test(ua);
+  const brands = (navigator.userAgentData && navigator.userAgentData.brands || []).map(b => b.brand).join(" ");
+  const inChrome = /Google Chrome/.test(brands) || (/Chrome\//.test(ua) && !/HeyTap|OppoBrowser|SamsungBrowser|MiuiBrowser|VivoBrowser|EdgA|OPR|UCBrowser|Firefox|wv\)/i.test(ua));
+  const chromeLink = document.getElementById("setChrome");
+  chromeLink.href = `intent://${location.host}${location.pathname}#Intent;scheme=https;package=com.android.chrome;end`;
+
+  // phone brand from the model (Chrome hides it in the user agent, so ask for it), falling back to the UA text
+  const STEPS = {
+    oppo: ["OPPO / realme / OnePlus (ColorOS)", [
+      "Open <b>Settings &rarr; Apps &rarr; App management &rarr; Chrome &rarr; Battery usage</b> and turn on <b>Allow background activity</b> and <b>Allow auto launch</b>.",
+      "Do the same for <b>Wakhi Calendar</b> if it is in the app list.",
+      "In <b>Settings &rarr; Battery &rarr; More settings</b>, turn off <b>Optimise battery use</b> for Chrome and Wakhi Calendar.",
+      "Restart the phone and open the app from its icon."]],
+    xiaomi: ["Xiaomi / Redmi / POCO", [
+      "Open <b>Settings &rarr; Apps &rarr; Manage apps &rarr; Chrome</b> and turn on <b>Autostart</b>.",
+      "In <b>Battery saver</b> for Chrome choose <b>No restrictions</b>.",
+      "Do the same for <b>Wakhi Calendar</b>, then open it from its icon."]],
+    vivo: ["vivo / iQOO", [
+      "Open <b>Settings &rarr; Battery &rarr; Background power consumption</b> and allow <b>Chrome</b>.",
+      "In <b>Settings &rarr; Apps &rarr; Chrome</b> turn on <b>Auto-start</b>.",
+      "Do the same for <b>Wakhi Calendar</b>, then open it from its icon."]],
+    samsung: ["Samsung", [
+      "Open <b>Settings &rarr; Apps &rarr; Chrome &rarr; Battery</b> and choose <b>Unrestricted</b>.",
+      "Remove Chrome from <b>Sleeping apps</b> in <b>Battery &rarr; Background usage limits</b>."]],
+    other: ["Android", [
+      "Update <b>Google Chrome</b> from the Play Store.",
+      "Open <b>Settings &rarr; Apps &rarr; Chrome &rarr; Battery</b> and allow background use (no restrictions).",
+      "Remove the app and install it again from Chrome."]]
+  };
+  function brandOf(model, text) {
+    const s = `${model} ${text}`;
+    if (/\b(CPH\d|P[A-Z]{2}M\d|RMX\d|OPPO|realme|OnePlus|HeyTap)/i.test(s)) return "oppo";
+    if (/\b(Redmi|POCO|Xiaomi|MI \d|M\d{4}|2\d{4}[0-9A-Z]{2,6})\b/i.test(s)) return "xiaomi";
+    if (/\b(vivo|V\d{4}|I\d{4}|iQOO)\b/i.test(s)) return "vivo";
+    if (/\bSM-[A-Z]\d/i.test(s)) return "samsung";
+    return "other";
+  }
+  async function showPhoneSetup() {
+    if (!isAndroid) return;
+    let model = "";
+    try { if (navigator.userAgentData && navigator.userAgentData.getHighEntropyValues) model = (await navigator.userAgentData.getHighEntropyValues(["model"])).model || ""; } catch (e) {}
+    const [title, steps] = STEPS[brandOf(model, ua)];
+    document.getElementById("setBrand").textContent = model ? `${title} · ${model}` : title;
+    document.getElementById("setSteps").innerHTML = steps.map(t => `<li>${t}</li>`).join("");
+    document.getElementById("setPhone").hidden = false;
+  }
+
+  function syncInstall() {
+    const st = document.getElementById("setInstallStatus");
+    document.getElementById("setInstall").hidden = !installEvt;
+    chromeLink.hidden = !(isAndroid && !inChrome);
+    if (standalone) st.textContent = "Installed. You are using the app.";
+    else if (/iphone|ipad|ipod/i.test(ua)) st.innerHTML = "In Safari tap Share, then <b>Add to Home Screen</b>.";
+    else if (isAndroid && !inChrome) st.innerHTML = "Open this page in <b>Chrome</b> to install it. Apps made from other phone browsers often do not open.";
+    else if (installEvt) st.textContent = "Ready to install on this device.";
+    else st.innerHTML = "In Chrome tap &#8942; &rarr; <b>Install app</b>. If you do not see it, the app may already be installed.";
+  }
+  document.getElementById("setInstall").addEventListener("click", () => installBtn.click());
+  addEventListener("beforeinstallprompt", () => setTimeout(syncInstall, 0));
+  addEventListener("appinstalled", () => setTimeout(syncInstall, 0));
+
+  document.getElementById("setCopy").addEventListener("click", async e => {
+    const btn = e.currentTarget, url = location.origin + "/";
+    try { await navigator.clipboard.writeText(url); btn.textContent = "Link copied"; }
+    catch (err) { btn.textContent = url; }
+    setTimeout(() => { btn.textContent = "Copy link"; }, 2500);
+  });
+
+  document.getElementById("setRepair").addEventListener("click", async () => {
+    const msg = document.getElementById("setRepairMsg");
+    msg.textContent = "Repairing…";
+    try {
+      if ("caches" in window) for (const k of await caches.keys()) await caches.delete(k);
+      if ("serviceWorker" in navigator) for (const r of await navigator.serviceWorker.getRegistrations()) await r.unregister();
+      msg.textContent = "Done. Reloading…";
+      setTimeout(() => location.reload(), 600);
+    } catch (e) { msg.textContent = "Could not clear the saved copy. Close the app and open it again."; }
+  });
+
+  document.getElementById("settingsBtn").addEventListener("click", () => {
+    syncThemes(); syncInstall(); showPhoneSetup();
+    if (dlg.showModal) dlg.showModal(); else dlg.setAttribute("open", "");
+  });
+  document.getElementById("setClose").addEventListener("click", () => dlg.close ? dlg.close() : dlg.removeAttribute("open"));
+  dlg.addEventListener("click", e => { if (e.target === dlg) dlg.close(); });
+  // a #settings link opens the panel straight away
+  if (location.hash === "#settings") document.getElementById("settingsBtn").click();
 
   document.getElementById("footYear").textContent = `© ${now.getFullYear()}`;
 
