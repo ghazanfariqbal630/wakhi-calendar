@@ -1,6 +1,6 @@
 // Wakhi Sholẽ Hisobet service worker: works offline after the first visit.
 // Bump VERSION whenever the page changes so phones pick up the new copy.
-const VERSION = "v3";
+const VERSION = "v4";
 const CORE = `wakhi-core-${VERSION}`;
 const RUNTIME = `wakhi-runtime-${VERSION}`;
 const PRECACHE = ["/", "/manifest.webmanifest", "/krd-logo.png",

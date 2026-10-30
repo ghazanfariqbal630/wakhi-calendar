@@ -345,7 +345,7 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
   <footer class="note">
     <p>Each Wakhi month runs from the 21st of one English month to the 20th of the next, so the year opens on 21 March (Nawroz). A month has as many days as the English month it starts in. Yitoqish (Feb–Mar) has 29 days in a leap year.</p>
     <p>Up to 2025-26 the published calendars opened the year with Yitoqish. From 2026-27 the year opens with Haba, and each year here follows the naming of its own published edition. Printed editions exist for 2020-21 to 2026-27. Years before 2020-21 use the naming of the earliest editions, and years after 2026-27 use the 2026-27 naming. Photos for those years come from the nearest edition.</p>
-    <p>Marked days follow the published editions. Nawroz, Mazdũrẽ Ror and Ozodhiẽ Ror are shown every year; Takht Nẽshine Salgira and Imomẽ Chũvake Salgira up to 2024-25. Other occasions appear only in the year whose edition printed them (2022-23 and 2023-24).</p>
+    <p>Marked days follow KRD's holiday list and the published editions. Fixed-date holidays repeat every year (Kashmir Solidarity Day from 1990, Youm-e-Takbeer from 1998, Takht Nẽshine Salgira and Imomẽ Chũvake Salgira up to 2024-25). Moon-dependent holidays (Eid-ul-Fitr, Eid-ul-Azha, Ashura, Eid Milad-un-Nabi) move every year and are shown only for the years whose dates are known.</p>
   </footer>
 
   <p class="ios-hint" id="iosHint" hidden>On iPhone or iPad: tap the Share button in Safari, then <b>Add to Home Screen</b> to install this calendar as an app.</p>
@@ -408,15 +408,24 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
   const NEW_NAMING_FROM = 2026;      // from 2026-27 the year opens with Haba
 
   // fixed English-date occasions, every year
-  // Occasions as printed in the published editions (2022-23 and 2023-24).
-  // Fixed-date ones repeat every year; the two Imamat days belong to Aga Khan IV (Imam 1957 – Feb 2025),
-  // so they are shown up to 2024-25 only (lastY = last Wakhi year).
+  // Holidays repeating on the same English date every year: KRD's "Holidays for Wakhi Calendar" list
+  // plus the published editions. [name, note, lastY, firstY] — lastY / firstY are Wakhi years
+  // (2024 = 2024-25); a day is only shown in the years it existed.
   const FIXED = {
-    "03-21": ["Nawroz", "Wakhi New Year"],
+    "02-01": ["Vichẽhosh", ""],
+    "02-05": ["Kashmir Solidarity Day", "", null, 1989],          // first held 5 Feb 1990
+    "03-21": ["Nawroz / S̃heg̃hd sol", "Wakhi New Year"],
+    "03-23": ["Pakistan Day", ""],
+    "04-01": ["Tag̃hem", "Spring sowing"],
     "05-01": ["Mazdũrẽ Ror", "Labour Day"],
-    "07-11": ["Takht Nẽshine Salgira", "Imamat Day", 2024],
+    "05-28": ["Youm-e-Takbeer", "", null, 1998],                  // from 28 May 1998
+    "07-11": ["Takht Nẽshine Salgira", "Imamat Day", 2024],       // Aga Khan IV, Imam 1957 – Feb 2025
+    "08-01": ["C̃henir", ""],
     "08-14": ["Ozodhiẽ Ror", "Independence Day"],
-    "12-13": ["Imomẽ Chũvake Salgira", "Imam's birthday", 2024]
+    "10-23": ["Awalgũni Didori", ""],
+    "11-09": ["Allama Iqbal Day", ""],
+    "12-13": ["Imomẽ Chũvake Salgira", "Imam's birthday", 2024],
+    "12-25": ["Quaid-e-Azam Day and Christmas", ""]
   };
   // occasions printed in a specific edition
   // month photos from each year's PDF (page n = month n); 2020-21 has none, later years reuse 2026-27
@@ -440,7 +449,18 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
     "2022-10-23": ["Didoriẽ Solgira", ""],
     "2022-11-07": ["Gojal Didari", ""],
     "2023-04-01": ["Tag̃hm (Shimshal)", "Spring sowing"],
-    "2023-04-23": ["Eid ul Fitr", ""]
+    "2023-04-23": ["Eid ul Fitr", ""],
+    // moon-dependent holidays from KRD's list (2027 dates)
+    "2027-03-10": ["Eid-ul-Fitr", ""],
+    "2027-03-11": ["Eid-ul-Fitr", ""],
+    "2027-03-12": ["Eid-ul-Fitr", ""],
+    "2027-05-17": ["Eid-ul-Azha", ""],
+    "2027-05-18": ["Eid-ul-Azha", ""],
+    "2027-05-19": ["Eid-ul-Azha", ""],
+    "2027-06-14": ["Ashura", "9th Muharram"],
+    "2027-06-15": ["Ashura", "10th Muharram"],
+    "2027-08-15": ["Eid Milad-un-Nabi", ""],
+    "2027-08-16": ["Eid Milad-un-Nabi", ""]
   };
 
   const DAY = 86400000;
@@ -472,7 +492,9 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
     const f = FIXED[k.slice(5)];
     if (!f) return null;
     const wy = d.getUTCMonth() > 2 || (d.getUTCMonth() === 2 && d.getUTCDate() >= 21) ? d.getUTCFullYear() : d.getUTCFullYear() - 1;
-    return f[2] && wy > f[2] ? null : f;
+    if (f[2] && wy > f[2]) return null;
+    if (f[3] && wy < f[3]) return null;
+    return f;
   }
   const label = Y => `${Y}-${String(Y + 1).slice(2)}`;
   const fmtG = d => `${d.getUTCDate()} ${EN[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
