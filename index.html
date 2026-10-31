@@ -155,6 +155,7 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
 .zoom img { max-width: 100%; max-height: 100%; border-radius: 10px; }
 .cur-info p { margin: 0; }
 .cur-lbl { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.men { font-size: 0.5em; font-weight: 600; color: var(--muted); white-space: nowrap; }
 .cur-name { font-family: var(--font-display); font-weight: 700; font-size: clamp(36px, 7vw, 60px); line-height: 1; color: var(--sky); overflow-wrap: anywhere; }
 .cur-day { font-size: 17px; }
 .cur-day b { color: var(--accent); font-size: 22px; }
@@ -225,6 +226,8 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
   .cur-photo { flex: none; height: 200px; min-height: 0; }
   .m-photo { height: 130px; }
   .month.feature { background: transparent; border: 0; box-shadow: none; padding: 0; }
+  .month.feature .gd { font-size: 9.5px; }
+  .month.feature .cell { padding: 4px 2px; }
   .month.feature .mhead, .month.feature .mspan { display: none; }
   .bar { flex-direction: column; align-items: stretch; gap: 10px; }
   .tools { justify-content: space-between; }
@@ -238,8 +241,9 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
   .dow { font-size: 10px; }
   .dow span { display: none; }
   .wd { font-size: 15px; }
-  .gd { font-size: 9.5px; }
-  .cell { padding: 3px; border-radius: 6px; }
+  .gd { font-size: 8.5px; letter-spacing: -0.03em; text-align: center; }
+  .cell { padding: 3px 1px; border-radius: 6px; }
+  .wd { padding-left: 2px; }
   .hols { font-size: 12px; }
 }
 
@@ -400,6 +404,7 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
   const MONTHS = ["Haba", "Tomũs", "Khumpac", "Hamapac", "Shundẽrpoc̃h", "Sũrpoc̃h",
     "Thẽsitoqish", "Nawtoqish", "Hũbtoqish", "Panz̃toqish", "Trutoqish", "Yitoqish"];
   const EN = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  const EN_FULL = ["January","February","March","April","May","June","July","August","September","October","November","December"];
   const DOW = [["Yekshẽmbi","Sun"],["Dũshẽmbi","Mon"],["Sishẽmbi","Tue"],["Chorshẽmbi","Wed"],
     ["Ponshẽmbi","Thu"],["Jũmha","Fri"],["Shẽmbi","Sat"]];
   const FIRST_YEAR = 1960, LAST_YEAR = 2060;   // 1960-61 … 2060-61
@@ -563,7 +568,7 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
   function monthHTML(m) {
       const endD = new Date(m.start + (m.len - 1) * DAY), startD = new Date(m.start);
       let html = `<img class="m-photo" src="${photoFor(m.Y, m.i)}" alt="${m.name} photo" loading="lazy" data-zoom>
-        <div class="mhead"><h2 class="mname">${m.name}</h2><span class="mnum">Month ${m.i + 1} · ${m.len} days</span></div>
+        <div class="mhead"><h2 class="mname">${m.name} <span class="men">(${EN_FULL[startD.getUTCMonth()]})</span></h2><span class="mnum">Month ${m.i + 1} · ${m.len} days</span></div>
         <div class="mspan">${startD.getUTCDate()} ${EN[startD.getUTCMonth()]} – ${endD.getUTCDate()} ${EN[endD.getUTCMonth()]} ${endD.getUTCFullYear()}</div>
         <div class="grid" role="grid" aria-label="${m.name}">`;
       DOW.forEach((d, k) => { html += `<div class="dow${k === 0 ? " sun" : ""}" role="columnheader" title="${d[1]}">${d[0].slice(0, 3)}<span>${d[1]}</span></div>`; });
@@ -573,7 +578,7 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
       for (let n = 1; n <= m.len; n++) {
         const t = m.start + (n - 1) * DAY, d = new Date(t), h = holiday(d);
         const gday = d.getUTCDate();
-        const g = gday === 1 ? `1 ${EN[d.getUTCMonth()]}` : gday;
+        const g = `${EN[d.getUTCMonth()]}-${gday}`;
         let cls = "cell d";
         if (d.getUTCDay() === 0) cls += " sunday";
         if (h) { cls += " hol"; list.push([n, d, h]); }
@@ -624,7 +629,7 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
          <p class="cur-lbl">${isNow ? "This month" : "Month " + (m.i + 1)} · ${label(view.Y)}</p>
          <button type="button" class="nav-btn" id="nextM" aria-label="Next month" ${atEnd ? "disabled" : ""}>›</button>
        </div>
-       <p class="cur-name">${m.name}</p>
+       <p class="cur-name">${m.name} <span class="men">(${EN_FULL[new Date(m.start).getUTCMonth()]})</span></p>
        ${body}
        ${isNow ? "" : `<button type="button" class="btn back" id="backNow">Back to this month</button>`}`;
     document.getElementById("prevM").addEventListener("click", () => step(-1));
