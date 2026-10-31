@@ -13,7 +13,7 @@ if (from < 0 || to < 0) throw new Error("calendar tables not found in wakhi-cale
 const { MONTHS, yearMonths, holiday, DAY } =
   new Function(html.slice(from, to) + "\nreturn { MONTHS, yearMonths, holiday, DAY };")();
 
-const FIRST = 2020, LAST = 2035;          // Wakhi years 2020-21 … 2035-36
+const FIRST = 2024, LAST = 2032;          // Wakhi years 2024-25 … 2032-33; Google Calendar drops feeds much over ~1 MB
 const EN = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 const pad = n => String(n).padStart(2, "0");
 const ymd = d => `${d.getUTCFullYear()}${pad(d.getUTCMonth() + 1)}${pad(d.getUTCDate())}`;
@@ -59,7 +59,7 @@ function build(name, everyDay) {
           lines.push(...event("month", d, title,
             `Month ${m.i + 1} of ${label(Y)}, ${m.len} days: ${d.getUTCDate()} ${EN[d.getUTCMonth()]} – ${endD.getUTCDate()} ${EN[endD.getUTCMonth()]} ${endD.getUTCFullYear()}`));
         } else if (everyDay) {
-          lines.push(...event("day", d, `${n} ${m.name}`, `${n} ${m.name} ${label(Y)}`));
+          lines.push(...event("day", d, `${n} ${m.name}`));
         }
         const h = holiday(d);
         if (h) lines.push(...event("hol", d, h[0], h[1] ? `${h[1]} · ${n} ${m.name}` : `${n} ${m.name}`));

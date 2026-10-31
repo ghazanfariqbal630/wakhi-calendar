@@ -856,13 +856,14 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
     setTimeout(() => { btn.textContent = "Copy link"; }, 2500);
   });
 
-  // calendar-app feeds (built by tools/make-ics.js)
+  // calendar-app feeds (built by tools/make-ics.js); bump FEED_V so Google fetches a fresh copy
+  const FEED_V = 2;
   function syncFeed() {
     const file = document.querySelector('input[name="feed"]:checked').value;
-    const webcal = `webcal://${location.host}/${file}`;
+    const webcal = `webcal://${location.host}/${file}?v=${FEED_V}`;
     document.getElementById("calApple").href = webcal;
     document.getElementById("calGoogle").href = "https://calendar.google.com/calendar/r?cid=" + encodeURIComponent(webcal);
-    return `${location.origin}/${file}`;
+    return `${location.origin}/${file}?v=${FEED_V}`;
   }
   document.querySelectorAll('input[name="feed"]').forEach(r => r.addEventListener("change", syncFeed));
   syncFeed();
