@@ -3,6 +3,7 @@
   "headers": [
     { "source": "/photos/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=604800" }] },
     { "source": "/sw.js", "headers": [{ "key": "Cache-Control", "value": "no-cache" }, { "key": "Service-Worker-Allowed", "value": "/" }] },
+    { "source": "/(.*).ics", "headers": [{ "key": "Content-Type", "value": "text/calendar; charset=utf-8" }, { "key": "Cache-Control", "value": "public, max-age=3600" }] },
     { "source": "/manifest.webmanifest", "headers": [{ "key": "Content-Type", "value": "application/manifest+json" }] }
   ]
 }

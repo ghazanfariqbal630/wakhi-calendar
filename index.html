@@ -277,6 +277,11 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
 .set-themes button { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 4px; border-radius: 12px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); font: 500 13px var(--font-body); cursor: pointer; }
 .set-themes button svg { width: 22px; height: 22px; stroke: var(--accent); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .set-themes button[aria-checked="true"] { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); background: var(--accent-soft); }
+#setCal { scroll-margin-top: 64px; }
+.set-feeds { display: grid; gap: 6px; }
+.set-feeds label { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--bg); font-size: 13.5px; cursor: pointer; }
+.set-feeds label:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); }
+.set-feeds input { accent-color: var(--accent); margin: 0; }
 .set-row { display: flex; flex-wrap: wrap; gap: 8px; }
 .set-btn { display: inline-flex; align-items: center; height: 38px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); font: 600 13.5px var(--font-body); cursor: pointer; text-decoration: none; }
 .set-btn:hover { border-color: var(--accent); }
@@ -337,6 +342,7 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
     <div class="status" id="status"></div>
     <div class="tools">
       <button class="btn" id="goToday" type="button">Go to today</button>
+      <button class="btn" id="addCal" type="button">Add to phone calendar</button>
       <label class="conv" for="convIn">Convert
         <input type="date" id="convIn">
         <output id="convOut" for="convIn"></output>
@@ -382,6 +388,25 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
       <a class="set-btn" id="setChrome" hidden>Open in Chrome</a>
       <button type="button" class="set-btn" id="setCopy">Copy link</button>
     </div>
+  </section>
+
+  <section class="set-sec" id="setCal">
+    <h3>Add to your calendar</h3>
+    <p class="set-note">Show Wakhi dates inside your phone or laptop calendar (Google Calendar, iPhone, Outlook). It updates by itself when new holidays are added.</p>
+    <div class="set-feeds" role="radiogroup" aria-label="What to add">
+      <label><input type="radio" name="feed" value="wakhi-calendar.ics" checked> Every day's Wakhi date</label>
+      <label><input type="radio" name="feed" value="wakhi-holidays.ics"> Holidays and month starts only</label>
+    </div>
+    <div class="set-row">
+      <a class="set-btn primary" id="calGoogle" target="_blank" rel="noopener">Google Calendar</a>
+      <a class="set-btn" id="calApple">iPhone / Mac / Outlook</a>
+      <button type="button" class="set-btn" id="calCopy">Copy calendar link</button>
+    </div>
+    <ol class="set-steps">
+      <li><b>Android:</b> tap <b>Google Calendar</b>, sign in if asked, then tap <b>Add</b>. Open the Calendar app &rarr; Settings &rarr; <b>Wakhi Calendar</b> and turn <b>Sync</b> on.</li>
+      <li><b>iPhone / Mac:</b> tap <b>iPhone / Mac / Outlook</b>, then <b>Subscribe</b>.</li>
+      <li><b>Laptop:</b> Google Calendar &rarr; Other calendars <b>+</b> &rarr; From URL, or Outlook &rarr; Add calendar &rarr; Subscribe from web, and paste the copied link.</li>
+    </ol>
   </section>
 
   <section class="set-sec" id="setPhone" hidden>
@@ -829,6 +854,27 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
     try { await navigator.clipboard.writeText(url); btn.textContent = "Link copied"; }
     catch (err) { btn.textContent = url; }
     setTimeout(() => { btn.textContent = "Copy link"; }, 2500);
+  });
+
+  // calendar-app feeds (built by tools/make-ics.js)
+  function syncFeed() {
+    const file = document.querySelector('input[name="feed"]:checked').value;
+    const webcal = `webcal://${location.host}/${file}`;
+    document.getElementById("calApple").href = webcal;
+    document.getElementById("calGoogle").href = "https://calendar.google.com/calendar/r?cid=" + encodeURIComponent(webcal);
+    return `${location.origin}/${file}`;
+  }
+  document.querySelectorAll('input[name="feed"]').forEach(r => r.addEventListener("change", syncFeed));
+  syncFeed();
+  document.getElementById("calCopy").addEventListener("click", async e => {
+    const btn = e.currentTarget, url = syncFeed();
+    try { await navigator.clipboard.writeText(url); btn.textContent = "Link copied"; }
+    catch (err) { btn.textContent = url; }
+    setTimeout(() => { btn.textContent = "Copy calendar link"; }, 2500);
+  });
+  document.getElementById("addCal").addEventListener("click", () => {
+    document.getElementById("settingsBtn").click();
+    document.getElementById("setCal").scrollIntoView({ block: "start" });
   });
 
   document.getElementById("setRepair").addEventListener("click", async () => {
