@@ -603,7 +603,8 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
       for (let n = 1; n <= m.len; n++) {
         const t = m.start + (n - 1) * DAY, d = new Date(t), h = holiday(d);
         const gday = d.getUTCDate();
-        const g = `${EN[d.getUTCMonth()]}-${gday}`;
+        // English month name only where it changes: the 1st of the English month and the box that opens the Wakhi month
+        const g = gday === 1 || n === 1 ? `${EN[d.getUTCMonth()]}-${gday}` : gday;
         let cls = "cell d";
         if (d.getUTCDay() === 0) cls += " sunday";
         if (h) { cls += " hol"; list.push([n, d, h]); }
